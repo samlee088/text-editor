@@ -1,13 +1,13 @@
 import { openDB } from 'idb';
 
 const initdb = async () =>
-  openDB('editor', 1, {
+  openDB('jate', 1, {
     upgrade(db) {
-      if (db.objectStoreNames.contains('editor')) {
+      if (db.objectStoreNames.contains('jate')) {
         console.log('editor database already exists');
         return;
       }
-      db.createObjectStore('editor', { keyPath: 'id', autoIncrement: true });
+      db.createObjectStore('jate', { keyPath: 'id', autoIncrement: true });
       console.log('editor database created');
     },
   });
@@ -17,9 +17,9 @@ const initdb = async () =>
 export const postDb = async (content) => {
   try {
     console.log('Post to the database');
-    const entryDb = await openDB('editor',1);
-    const tx = entryDb.transaction('editor', 'readwrite');
-    const store = tx.objectStore('editor');
+    const entryDb = await openDB('jate',1);
+    const tx = entryDb.transaction('jate', 'readwrite');
+    const store = tx.objectStore('jate');
     const request = store.add({entry:content});
     const result = await request;
     console.log('data saved', result);
@@ -27,14 +27,15 @@ export const postDb = async (content) => {
     console.log('Error with posting data entry')
   }
 }
+
 // TODO: Add logic to a method that accepts some content and adds it to the database
 export const putDb = async (content) => {
   try{ 
     console.log('PUT to the database');
-    const entryDb = await openDB('editor',1);
-    const tx = entryDb.transaction('editor', 'readwrite');
-    const store = tx.objectStore('editor');
-    const request = store.put({id:id, entry:content});
+    const entryDb = await openDB('jate',1);
+    const tx = entryDb.transaction('jate', 'readwrite');
+    const store = tx.objectStore('jate');
+    const request = store.put({id:id, value:content});
     const result = await request;
     console.log('Entry was updated', result);
 
@@ -50,9 +51,9 @@ export const putDb = async (content) => {
 export const getDb = async () => {
   try{
     console.log('Get all from the database');
-    const entryDb = await openDB('editor',1);
-    const tx = entryDb.transaction('editor','readonly');
-    const store = tx.objectStore('editor');
+    const entryDb = await openDB('jate',1);
+    const tx = entryDb.transaction('jate','readonly');
+    const store = tx.objectStore('jate');
     const request = store.getAll();
     const result = await request;
     console.log('result.value', result);
